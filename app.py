@@ -1,6 +1,6 @@
 
 from flask import Flask
-from flask_cors import CORS   # ✅ الجديد
+from flask_cors import CORS
 
 from config import Config
 from database import db
@@ -13,26 +13,32 @@ from routes.request_routes import request_routes
 from routes.pickup_routes import pickup_routes
 from routes.company_routes import company_routes
 
+# ✅ الجديد 👇
+from routes.contact_routes import contact_routes
+
 # ✅ إنشاء التطبيق
 app = Flask(__name__)
 
-# ✅ تفعيل CORS (مهم جدًا 🔥)
-CORS(app)
+# ✅ تفعيل CORS
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ✅ إعدادات الداتابيز
 app.config.from_object(Config)
 db.init_app(app)
 
-# ✅ ربط الـ routes بالتطبيق
-user_routes(app)
+# ✅ ربط الـ routes
 
+user_routes(app)
 material_routes(app)
 price_routes(app)
 request_routes(app)
 pickup_routes(app)
 company_routes(app)
 
-# ✅ route لتأكيد إن السيرفر شغال
+# ✅ الجديد 👇
+contact_routes(app)
+
+# ✅ route للتأكد
 @app.route("/")
 def home():
     return {"message": "RE Tadweer Backend Running"}
