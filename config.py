@@ -1,10 +1,10 @@
 
-
-
-
-
 class Config:
-    SQLALCHEMY_DATABASE_URI = (
-        "mysql+pymysql://root:MySql%402026@localhost/project_db?charset=utf8mb4"
-    )
+    SQLALCHEMY_DATABASE_URI = "sqlite:///re_tadweer.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+
+
+
+
