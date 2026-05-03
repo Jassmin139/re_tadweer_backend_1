@@ -12,30 +12,26 @@ from routes.price_routes import price_routes
 from routes.request_routes import request_routes
 from routes.pickup_routes import pickup_routes
 from routes.company_routes import company_routes
-
-# ✅ الجديد 👇
 from routes.contact_routes import contact_routes
 
 # ✅ إنشاء التطبيق
 app = Flask(__name__)
 
-# ✅ تفعيل CORS
-CORS(app, resources={r"/*": {"origins": "*"}})
+# ✅ ✅ الحل النهائي الصحيح لـ CORS 🔥
+CORS(app)
 
 # ✅ إعدادات الداتابيز
 app.config.from_object(Config)
 db.init_app(app)
 
 # ✅ ربط الـ routes
-
 user_routes(app)
 material_routes(app)
+
 price_routes(app)
 request_routes(app)
 pickup_routes(app)
 company_routes(app)
-
-# ✅ الجديد 👇
 contact_routes(app)
 
 # ✅ route للتأكد
@@ -46,4 +42,6 @@ def home():
 # ✅ تشغيل التطبيق
 if __name__ == "__main__":
     app.run(debug=True)
+
+
 
