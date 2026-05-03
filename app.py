@@ -26,6 +26,27 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+    # ✅ ✅ إضافة الداتا (اللي نقصاك بس)
+    from models.material_type import MaterialType
+    from models.material import Material
+
+    if not MaterialType.query.first():
+        # ✅ types
+        t1 = MaterialType(type_name="Plastic")
+        t2 = MaterialType(type_name="Paper")
+        t3 = MaterialType(type_name="Electronics")
+
+        db.session.add_all([t1, t2, t3])
+        db.session.commit()
+
+        # ✅ materials
+        m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
+        m2 = Material(name="Paper", description="Paper waste", price=2, image="img.png", type_id=2)
+        m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
+
+        db.session.add_all([m1, m2, m3])
+        db.session.commit()
+
 
 # ✅ ربط routes
 user_routes(app)
