@@ -23,6 +23,10 @@ CORS(app)
 app.config.from_object(Config)
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
+
+
 # ✅ ربط routes
 user_routes(app)
 material_routes(app)
