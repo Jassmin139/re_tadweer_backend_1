@@ -24,8 +24,9 @@ app.config.from_object(Config)
 db.init_app(app)
 
 with app.app_context():
-    db.create_all()
 
+ db.drop_all()
+ db.create_all()
 
 # ✅ ✅ ✅ الحل النهائي للماتريال (route manual)
 @app.route("/add-materials", methods=["GET"])
