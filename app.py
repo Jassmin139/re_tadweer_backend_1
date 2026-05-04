@@ -13,6 +13,10 @@ from routes.request_routes import request_routes
 from routes.pickup_routes import pickup_routes
 from routes.company_routes import company_routes
 from routes.contact_routes import contact_routes
+
+from models.material_type import MaterialType
+from models.material import Material
+
 # ✅ إنشاء التطبيق (أول حاجة)
 app = Flask(__name__)
 
@@ -25,9 +29,7 @@ db.init_app(app)
 
 with app.app_context():
 
- db.drop_all()
- db.create_all()
-
+     db.create_all()
 # ✅ ✅ ✅ الحل النهائي للماتريال (route manual)
 @app.route("/add-materials", methods=["GET"])
 def add_materials():
