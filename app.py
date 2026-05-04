@@ -78,6 +78,11 @@ image="img.png", type_id=2)
     except Exception as e:
         return {"error": str(e)}
 
+@app.route("/init-db")
+def init_db():
+    db.create_all()
+    return "Database created ✅"
+
 
 # ✅ ربط routes
 user_routes(app)
