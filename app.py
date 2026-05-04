@@ -31,7 +31,7 @@ with app.app_context():
     from models.material import Material
 
     try:
-        if MaterialType.query.count() == 0:   # ✅ آمن بدل first()
+        if True:
 
             # ✅ types
             t1 = MaterialType(type_name="Plastic")
