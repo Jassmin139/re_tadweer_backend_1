@@ -24,7 +24,24 @@ app = Flask(__name__)
 CORS(app)
 
 # ✅ Config
+
+
 app.config.from_object(Config)
+
+database_url = os.getenv("DATABASE_URL")
+
+if not database_url:
+    database_url = "sqlite:///app.db"
+
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# ✅ وبعد كده فقط
+db.init_app(app)
+
 db.init_app(app)
 
 with app.app_context():
