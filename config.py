@@ -1,8 +1,10 @@
 
-class Config:
-    SQLALCHEMY_DATABASE_URI = "sqlite:///re_tadweer.db"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+import os
+
+class Config:
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 

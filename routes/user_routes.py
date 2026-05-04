@@ -43,10 +43,29 @@ def user_routes(app):
 
         except Exception as e:
             db.session.rollback()
+
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ Shared Login (User + Company)
+    # ✅ ✅ GET All Users (الجديد 🔥)
+    @app.route("/users", methods=["GET"])
+    def get_users():
+        users = User.query.all()
+
+        result = []
+        for u in users:
+            result.append({
+                "id": u.user_id,
+                "name": u.name,
+                "email": u.email,
+                "phone": u.phone,
+                "address": u.address
+            })
+
+        return jsonify(result), 200
+
+
+    # ✅ Shared Login
     @app.route("/login", methods=["POST"])
     def login():
         try:
@@ -79,8 +98,8 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ GET User Profile (الجديد 🔥)
-    @app.route("/users/profile/<int:user_id>", methods=["GET"])
+    # ✅ ✅ GET User Profile
+    @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
         user = User.query.get(user_id)
@@ -97,7 +116,7 @@ def user_routes(app):
         }), 200
 
 
-    # ✅ ✅ GET User Requests (History 🔥)
+    # ✅ ✅ GET User Requests
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
 
     def get_user_requests(user_id):
