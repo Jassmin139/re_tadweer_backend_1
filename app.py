@@ -1,7 +1,7 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from config import Config
 from database import db
@@ -17,6 +17,7 @@ from routes.contact_routes import contact_routes
 
 # ✅ مهم جدًا: استيراد كل الموديلز
 from models import material_type, material, user, company, recycle_request, pickup, contact, gift
+
 # ✅ إنشاء التطبيق
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ✅ Config
+
 app.config.from_object(Config)
 
 # ✅ Database URL
@@ -47,9 +49,11 @@ with app.app_context():
 
 # ✅ route لإنشاء الجداول يدوي
 @app.route("/init-db")
+
 def init_db():
     db.create_all()
     return "Database created ✅"
+
 
 # ✅ route إضافة ماتريال
 @app.route("/add-materials", methods=["GET"])
@@ -68,7 +72,9 @@ def add_materials():
 
         if Material.query.count() == 0:
             m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
-            m2 = Material(name="Paper", description="Paper waste", price=2, image="img.png", type_id=2)
+            m2 = Material(name="Paper", description="Paper waste", price=2,
+
+image="img.png", type_id=2)
             m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
 
             db.session.add_all([m1, m2, m3])
@@ -79,20 +85,29 @@ def add_materials():
     except Exception as e:
         return {"error": str(e)}
 
+
 # ✅ ربط routes
 user_routes(app)
 material_routes(app)
 price_routes(app)
-
 request_routes(app)
 pickup_routes(app)
 company_routes(app)
 contact_routes(app)
 
+
+# ✅ ✅ عرض الصور (أهم تعديل 🔥)
+@app.route('/uploads/<filename>')
+
+def get_image(filename):
+    return send_from_directory('uploads', filename)
+
+
 # ✅ test route
 @app.route("/")
 def home():
     return {"message": "RE Tadweer Backend Running"}
+
 
 # ✅ تشغيل السيرفر
 port = int(os.environ.get("PORT", 8080))
