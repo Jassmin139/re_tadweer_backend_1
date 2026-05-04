@@ -20,4 +20,4 @@ class RecycleRequest(db.Model):
 
     # 🔥 الجديد: نوع المكافأة
     reward_type = db.Column(db.String(10))  # "cash" أو "gift"
-
+    image_path = db.Column(db.String(255))
