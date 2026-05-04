@@ -30,8 +30,15 @@ with app.app_context():
     from models.material_type import MaterialType
     from models.material import Material
 
+    print("Start seeding...")  # ✅ مهم
+
     try:
-        if True:
+        types_count = MaterialType.query.count()
+        print("Types count:", types_count)
+
+        if types_count == 0:
+
+            print("Adding types...")
 
             # ✅ types
             t1 = MaterialType(type_name="Plastic")
