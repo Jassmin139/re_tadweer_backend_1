@@ -30,22 +30,28 @@ with app.app_context():
     from models.material_type import MaterialType
     from models.material import Material
 
-    if not MaterialType.query.first():
-        # ✅ types
-        t1 = MaterialType(type_name="Plastic")
-        t2 = MaterialType(type_name="Paper")
-        t3 = MaterialType(type_name="Electronics")
+    try:
+        if MaterialType.query.count() == 0:   # ✅ آمن بدل first()
 
-        db.session.add_all([t1, t2, t3])
-        db.session.commit()
+            # ✅ types
+            t1 = MaterialType(type_name="Plastic")
+            t2 = MaterialType(type_name="Paper")
+            t3 = MaterialType(type_name="Electronics")
 
-        # ✅ materials
-        m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
-        m2 = Material(name="Paper", description="Paper waste", price=2, image="img.png", type_id=2)
-        m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
+            db.session.add_all([t1, t2, t3])
+            db.session.commit()
 
-        db.session.add_all([m1, m2, m3])
-        db.session.commit()
+            # ✅ materials
+
+            m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
+            m2 = Material(name="Paper", description="Paper waste", price=2, image="img.png", type_id=2)
+            m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
+
+            db.session.add_all([m1, m2, m3])
+            db.session.commit()
+
+    except Exception as e:
+        print("Seeding error:", e)
 
 
 # ✅ ربط routes
@@ -67,6 +73,3 @@ port = int(os.environ.get("PORT", 8080))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
-
-
-
