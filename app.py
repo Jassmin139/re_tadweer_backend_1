@@ -42,7 +42,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # ✅ وبعد كده فقط
 db.init_app(app)
 
-db.init_app(app)
 
 with app.app_context():
 
