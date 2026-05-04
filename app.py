@@ -26,21 +26,16 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-    # ✅ ✅ إضافة الداتا (اللي نقصاك بس)
+
+# ✅ ✅ ✅ الحل النهائي للماتريال (route manual)
+@app.route("/add-materials", methods=["GET"])
+def add_materials():
     from models.material_type import MaterialType
     from models.material import Material
 
-    print("Start seeding...")  # ✅ مهم
-
     try:
-        types_count = MaterialType.query.count()
-        print("Types count:", types_count)
-
-        if types_count == 0:
-
-            print("Adding types...")
-
-            # ✅ types
+        # ✅ types
+        if MaterialType.query.count() == 0:
             t1 = MaterialType(type_name="Plastic")
             t2 = MaterialType(type_name="Paper")
             t3 = MaterialType(type_name="Electronics")
@@ -48,17 +43,21 @@ with app.app_context():
             db.session.add_all([t1, t2, t3])
             db.session.commit()
 
-            # ✅ materials
-
+        # ✅ materials
+        if Material.query.count() == 0:
             m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
-            m2 = Material(name="Paper", description="Paper waste", price=2, image="img.png", type_id=2)
+            m2 = Material(name="Paper", description="Paper waste", price=2, 
+
+image="img.png", type_id=2)
             m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
 
             db.session.add_all([m1, m2, m3])
             db.session.commit()
 
+        return {"message": "Materials added ✅"}
+
     except Exception as e:
-        print("Seeding error:", e)
+        return {"error": str(e)}
 
 
 # ✅ ربط routes
@@ -66,6 +65,7 @@ user_routes(app)
 material_routes(app)
 price_routes(app)
 request_routes(app)
+
 pickup_routes(app)
 company_routes(app)
 contact_routes(app)
