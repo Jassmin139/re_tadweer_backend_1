@@ -16,8 +16,7 @@ from routes.company_routes import company_routes
 from routes.contact_routes import contact_routes
 
 # ✅ مهم جدًا: استيراد كل الموديلز
-from models import material_type, material, user, company, request, price, pickup, contact
-
+from models import material_type, material, user, company, recycle_request, pickup, contact, gift
 # ✅ إنشاء التطبيق
 app = Flask(__name__)
 
