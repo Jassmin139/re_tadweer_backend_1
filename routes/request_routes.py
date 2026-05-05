@@ -12,7 +12,7 @@ def request_routes(app):
     UPLOAD_FOLDER = "uploads"
     BASE_URL = "https://retadweerbackend1-production.up.railway.app/"
 
-    # ✅ ✅ Upload Image
+    # ✅ ✅ Upload Image (لسه موجود لو احتجتيه)
     @app.route("/upload-image", methods=["POST"])
     def upload_image():
 
@@ -24,18 +24,13 @@ def request_routes(app):
         if file.filename == "":
             return jsonify({"error": "No selected file"}), 400
 
-        # ✅ إنشاء فولدر لو مش موجود
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
 
-        # ✅ تغيير اسم الصورة (علشان مفيش مسافات)
         filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
-
         file_path = os.path.join(UPLOAD_FOLDER, filename)
-
         file.save(file_path)
 
-        # ✅ ✅ URL كامل للصورة
         image_url = BASE_URL + "uploads/" + filename
 
         return jsonify({
@@ -44,42 +39,59 @@ def request_routes(app):
         })
 
 
-    # ✅ ✅ Create Recycle Request
+    # ✅ ✅ ✅ Create Recycle Request (معدل عشان FormData + Image)
     @app.route("/recycle-requests", methods=["POST"])
     def create_request():
         try:
-            data = request.get_json()
 
-            if not data or not isinstance(data, dict):
+            # ✅ استلام البيانات من form-data
+            quantity = request.form.get("quantity")
 
-                return jsonify({"error": "Invalid JSON format"}), 400
+            total_price = request.form.get("total_price")
+            user_id = request.form.get("user_id")
+            reward_type = request.form.get("reward_type")
 
-            if not data.get("quantity"):
+            # ✅ validation
+            if not quantity:
                 return jsonify({"error": "Quantity is required"}), 400
 
-            if not data.get("total_price"):
+            if not total_price:
                 return jsonify({"error": "Total price is required"}), 400
 
-            if not data.get("user_id"):
+            if not user_id:
                 return jsonify({"error": "User ID is required"}), 400
 
-            if not data.get("reward_type"):
+            if not reward_type:
                 return jsonify({"error": "Reward type is required"}), 400
 
-            if data.get("reward_type") not in ["cash", "gift"]:
+            if reward_type not in ["cash", "gift"]:
+
                 return jsonify({"error": "Reward must be 'cash' or 'gift'"}), 400
 
-            # ✅ ناخد URL للصورة
-            image_url = data.get("image_url")
+            # ✅ استلام الصورة
+            file = request.files.get("image")
+
+            image_url = None
+
+            if file:
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.makedirs(UPLOAD_FOLDER)
+
+                filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+
+                image_url = BASE_URL + "uploads/" + filename
 
             # ✅ إنشاء الطلب
             req = RecycleRequest(
-                quantity=data.get("quantity"),
-                total_price=data.get("total_price"),
+                quantity=quantity,
+                total_price=total_price,
+
                 request_date=date.today(),
                 status="Pending",
-                user_id=data.get("user_id"),
-                reward_type=data.get("reward_type"),
+                user_id=user_id,
+                reward_type=reward_type,
                 image_path=image_url
             )
 
@@ -87,7 +99,6 @@ def request_routes(app):
             db.session.commit()
 
             return jsonify({
-
                 "message": "Recycle request created",
                 "request_id": req.request_id,
                 "image_url": image_url
