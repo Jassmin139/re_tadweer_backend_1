@@ -20,6 +20,7 @@ def user_routes(app):
             if not data.get("phone"):
                 return jsonify({"error": "Phone is required"}), 400
             if not data.get("address"):
+
                 return jsonify({"error": "Address is required"}), 400
 
             existing = User.query.filter_by(email=data.get("email")).first()
@@ -48,7 +49,6 @@ def user_routes(app):
 
     # ✅ GET All Users
     @app.route("/users", methods=["GET"])
-
     def get_users():
         users = User.query.all()
 
@@ -68,6 +68,7 @@ def user_routes(app):
     # ✅ Login
     @app.route("/login", methods=["POST"])
     def login():
+
         try:
             data = request.get_json()
 
@@ -95,11 +96,11 @@ def user_routes(app):
             return jsonify({"error": "User not found"}), 404
 
         except Exception as e:
+
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ GET User Profile + Orders (المهم 🔥🔥)
-
+    # ✅ ✅ GET User Profile + Orders
     @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
@@ -108,8 +109,9 @@ def user_routes(app):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        # ✅ نجيب كل الطلبات
-        requests = RecycleRequest.query.filter_by(user_id=user_id).all()
+        requests = RecycleRequest.query.filter_by(user_id=user_id) \
+            .order_by(RecycleRequest.request_id.desc()) \
+            .all()
 
         orders = []
 
@@ -125,17 +127,16 @@ def user_routes(app):
             })
 
         return jsonify({
-
             "user_id": user.user_id,
             "name": user.name,
             "email": user.email,
             "phone": user.phone,
             "address": user.address,
-            "orders": orders   # ✅ أهم تعديل
+            "orders": orders
         }), 200
 
 
-    # ✅ (اختياري) GET requests فقط
+    # ✅ GET User Requests (اختياري)
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
     def get_user_requests(user_id):
 
@@ -148,11 +149,13 @@ def user_routes(app):
                 "request_id": r.request_id,
                 "quantity": r.quantity,
                 "total_price": r.total_price,
-
                 "status": r.status
-            })
+
+           })
 
         return jsonify(result), 200
+
+
 
 
 
