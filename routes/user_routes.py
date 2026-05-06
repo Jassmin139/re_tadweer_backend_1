@@ -43,12 +43,12 @@ def user_routes(app):
 
         except Exception as e:
             db.session.rollback()
-
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ GET All Users (الجديد 🔥)
+    # ✅ GET All Users
     @app.route("/users", methods=["GET"])
+
     def get_users():
         users = User.query.all()
 
@@ -65,7 +65,7 @@ def user_routes(app):
         return jsonify(result), 200
 
 
-    # ✅ Shared Login
+    # ✅ Login
     @app.route("/login", methods=["POST"])
     def login():
         try:
@@ -98,7 +98,8 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ GET User Profile
+    # ✅ ✅ GET User Profile + Orders (المهم 🔥🔥)
+
     @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
@@ -107,18 +108,35 @@ def user_routes(app):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
+        # ✅ نجيب كل الطلبات
+        requests = RecycleRequest.query.filter_by(user_id=user_id).all()
+
+        orders = []
+
+        for r in requests:
+            orders.append({
+                "request_id": r.request_id,
+                "quantity": r.quantity,
+                "total_price": r.total_price,
+                "status": r.status,
+                "date": str(r.request_date),
+                "reward_type": r.reward_type,
+                "image": r.image_path
+            })
+
         return jsonify({
+
             "user_id": user.user_id,
             "name": user.name,
             "email": user.email,
             "phone": user.phone,
-            "address": user.address
+            "address": user.address,
+            "orders": orders   # ✅ أهم تعديل
         }), 200
 
 
-    # ✅ ✅ GET User Requests
+    # ✅ (اختياري) GET requests فقط
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
-
     def get_user_requests(user_id):
 
         requests = RecycleRequest.query.filter_by(user_id=user_id).all()
@@ -130,6 +148,7 @@ def user_routes(app):
                 "request_id": r.request_id,
                 "quantity": r.quantity,
                 "total_price": r.total_price,
+
                 "status": r.status
             })
 
