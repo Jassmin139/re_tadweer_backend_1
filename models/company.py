@@ -10,10 +10,14 @@ class Company(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
-    # ✅ علشان نرجعها بسهولة
+    # ✅ لازم جوه الكلاس 👇
+    password = db.Column(db.String(255))
+    city = db.Column(db.String(100))
+
     def to_dict(self):
         return {
             "company_id": self.company_id,
             "name": self.name,
             "email": self.email
         }
+
