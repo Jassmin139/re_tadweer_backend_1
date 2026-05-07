@@ -134,7 +134,6 @@ def user_routes(app):
     def get_user_profile(user_id):
 
         user = User.query.get(user_id)
-
         if not user:
             return jsonify({"error": "User not found"}), 404
 
