@@ -1,5 +1,5 @@
 
-from flask import app, request, jsonify
+from flask import request, jsonify
 from models.user import User
 from models.company import Company
 from models.recycle_request import RecycleRequest
