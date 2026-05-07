@@ -164,6 +164,7 @@ def user_routes(app):
         }), 200
 
 
+
     # ✅ User Requests
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
     def get_user_requests(user_id):
@@ -179,7 +180,8 @@ def user_routes(app):
             } for r in requests
         ]), 200
 
-    # ✅ Company Profile
+
+    # ✅ Company Profile ✅🔥
     @app.route("/companies/<int:company_id>", methods=["GET"])
     def get_company_profile(company_id):
 
@@ -191,8 +193,17 @@ def user_routes(app):
         return jsonify({
             "company_id": company.company_id,
             "name": company.name,
+            "email": company.email,
 
-            "email": company.email
+            "tax_id": getattr(company, "tax_id", None),
+            "established_year": getattr(company, "established_year", None),
+            "employees": getattr(company, "employees", None),
+            "address": getattr(company, "address", None),
+            "phone": getattr(company, "phone", None),
+            "type": getattr(company, "type", None),
+            "registration_number": getattr(company, "registration_number", None)
         }), 200
+
+   
 
 
