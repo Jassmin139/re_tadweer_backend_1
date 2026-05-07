@@ -17,7 +17,6 @@ def user_routes(app):
                 return jsonify({"error": "Name is required"}), 400
             if not data.get("email"):
                 return jsonify({"error": "Email is required"}), 400
-
             if not data.get("phone"):
                 return jsonify({"error": "Phone is required"}), 400
             if not data.get("address"):
@@ -52,18 +51,15 @@ def user_routes(app):
     def get_users():
         users = User.query.all()
 
-        result = []
-        for u in users:
-            result.append({
+        return jsonify([
+            {
                 "id": u.user_id,
                 "name": u.name,
                 "email": u.email,
-
                 "phone": u.phone,
                 "address": u.address
-            })
-
-        return jsonify(result), 200
+            } for u in users
+        ]), 200
 
 
     # ✅ Register Company
@@ -81,6 +77,7 @@ def user_routes(app):
             if existing:
                 return jsonify({"error": "Company already exists"}), 400
 
+
             company = Company(
                 name=data.get("name"),
                 email=data.get("email")
@@ -90,7 +87,6 @@ def user_routes(app):
             db.session.commit()
 
             return jsonify({
-
                 "message": "Company registered successfully",
                 "company_id": company.company_id
             }), 201
@@ -100,7 +96,7 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ Login
+    # ✅ Login (User + Company)
     @app.route("/login", methods=["POST"])
     def login():
         try:
@@ -142,15 +138,15 @@ def user_routes(app):
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        requests = RecycleRequest.query.filter_by(user_id=user_id) \
-            .order_by(RecycleRequest.request_id.desc()).all()
+        requests = RecycleRequest.query.filter_by(user_id=user_id)\
+            .order_by(RecycleRequest.request_id.desc())\
+            .all()
 
         orders = []
 
         for r in requests:
             orders.append({
                 "request_id": r.request_id,
-
                 "quantity": r.quantity,
                 "total_price": r.total_price,
                 "status": r.status,
@@ -171,20 +167,16 @@ def user_routes(app):
 
     # ✅ User Requests
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
-
     def get_user_requests(user_id):
 
         requests = RecycleRequest.query.filter_by(user_id=user_id).all()
 
-        result = []
-
-        for r in requests:
-            result.append({
+        return jsonify([
+            {
                 "request_id": r.request_id,
                 "quantity": r.quantity,
                 "total_price": r.total_price,
                 "status": r.status
-            })
-
-        return jsonify(result), 200
+            } for r in requests
+        ]), 200
 
