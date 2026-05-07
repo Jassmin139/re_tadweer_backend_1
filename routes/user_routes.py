@@ -20,7 +20,6 @@ def user_routes(app):
             if not data.get("phone"):
                 return jsonify({"error": "Phone is required"}), 400
             if not data.get("address"):
-
                 return jsonify({"error": "Address is required"}), 400
 
             existing = User.query.filter_by(email=data.get("email")).first()
@@ -65,10 +64,44 @@ def user_routes(app):
         return jsonify(result), 200
 
 
-    # ✅ Login
+    # ✅ ✅ Register Company 🔥
+    @app.route("/companies/register", methods=["POST"])
+    def register_company():
+        try:
+            data = request.get_json()
+
+            if not data.get("name"):
+                return jsonify({"error": "Name is required"}), 400
+
+            if not data.get("email"):
+                return jsonify({"error": "Email is required"}), 400
+
+            existing = Company.query.filter_by(email=data.get("email")).first()
+            if existing:
+                return jsonify({"error": "Company already exists"}), 400
+
+            company = Company(
+                name=data.get("name"),
+                email=data.get("email")
+            )
+
+            db.session.add(company)
+
+            db.session.commit()
+
+            return jsonify({
+                "message": "Company registered successfully",
+                "company_id": company.company_id
+            }), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+
+    # ✅ Login (user + company)
     @app.route("/login", methods=["POST"])
     def login():
-
         try:
             data = request.get_json()
 
@@ -76,6 +109,8 @@ def user_routes(app):
                 return jsonify({"error": "Email is required"}), 400
 
             email = data.get("email")
+
+            # ✅ user
 
             user = User.query.filter_by(email=email).first()
             if user:
@@ -85,6 +120,7 @@ def user_routes(app):
                     "name": user.name
                 }), 200
 
+            # ✅ company
             company = Company.query.filter_by(email=email).first()
             if company:
                 return jsonify({
@@ -96,11 +132,10 @@ def user_routes(app):
             return jsonify({"error": "User not found"}), 404
 
         except Exception as e:
-
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ GET User Profile + Orders
+    # ✅ ✅ User Profile + Orders (مرتبة بالأحدث)
     @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
@@ -128,6 +163,7 @@ def user_routes(app):
 
         return jsonify({
             "user_id": user.user_id,
+
             "name": user.name,
             "email": user.email,
             "phone": user.phone,
@@ -136,7 +172,7 @@ def user_routes(app):
         }), 200
 
 
-    # ✅ GET User Requests (اختياري)
+    # ✅ (اختياري) Requests فقط
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
     def get_user_requests(user_id):
 
@@ -150,10 +186,10 @@ def user_routes(app):
                 "quantity": r.quantity,
                 "total_price": r.total_price,
                 "status": r.status
-
-           })
+            })
 
         return jsonify(result), 200
+
 
 
 
