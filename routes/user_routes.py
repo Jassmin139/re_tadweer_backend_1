@@ -63,7 +63,6 @@ def user_routes(app):
 
 
 
-def user_routes(app):
 
     # ✅ Register Company
     @app.route("/companies/register", methods=["POST"])
@@ -193,7 +192,6 @@ def user_routes(app):
 
 
  
-def user_routes(app):
 
     # ✅ Company Profile
     @app.route("/companies/<int:company_id>", methods=["GET"])
