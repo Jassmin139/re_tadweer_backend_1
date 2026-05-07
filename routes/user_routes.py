@@ -1,5 +1,5 @@
 
-from flask import request, jsonify
+from flask import app, request, jsonify
 from models.user import User
 from models.company import Company
 from models.recycle_request import RecycleRequest
@@ -62,6 +62,9 @@ def user_routes(app):
         ]), 200
 
 
+
+def user_routes(app):
+
     # ✅ Register Company
     @app.route("/companies/register", methods=["POST"])
     def register_company():
@@ -77,10 +80,16 @@ def user_routes(app):
             if existing:
                 return jsonify({"error": "Company already exists"}), 400
 
-
             company = Company(
                 name=data.get("name"),
-                email=data.get("email")
+                email=data.get("email"),
+                tax_id=data.get("tax_id"),
+                established_year=data.get("established_year"),
+                employees=data.get("employees"),
+                address=data.get("address"),
+                phone=data.get("phone"),
+                type=data.get("type"),
+                registration_number=data.get("registration_number")
             )
 
             db.session.add(company)
@@ -94,6 +103,8 @@ def user_routes(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": str(e)}), 500
+
+
 
 
     # ✅ Login (User + Company)
@@ -181,29 +192,44 @@ def user_routes(app):
         ]), 200
 
 
-    # ✅ Company Profile ✅🔥
-    @app.route("/companies/<int:company_id>", methods=["GET"])
-    def get_company_profile(company_id):
+ 
+    # ✅ Company Profile
+@app.route("/companies/<int:company_id>", methods=["GET"])
+def get_company_profile(company_id):
 
-        company = Company.query.get(company_id)
+    company = Company.query.get(company_id)
 
-        if not company:
-            return jsonify({"error": "Company not found"}), 404
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
 
-        return jsonify({
-            "company_id": company.company_id,
-            "name": company.name,
-            "email": company.email,
+    # ✅ هات الطلبات اللي اتعاملت مع الشركة
+    requests = RecycleRequest.query.filter_by(company_id=company_id).all()
 
-            "tax_id": getattr(company, "tax_id", None),
-            "established_year": getattr(company, "established_year", None),
-            "employees": getattr(company, "employees", None),
-            "address": getattr(company, "address", None),
-            "phone": getattr(company, "phone", None),
-            "type": getattr(company, "type", None),
-            "registration_number": getattr(company, "registration_number", None)
-        }), 200
+    orders = []
 
-   
+    for r in requests:
+        orders.append({
+            "request_id": r.request_id,
+            "quantity": r.quantity,
+            "total_price": r.total_price,
+            "status": r.status,
+            "date": str(r.request_date)
+        })
+  
+    return jsonify({
+        "company_id": company.company_id,
+        "name": company.name,
+        "email": company.email,
 
+        "tax_id": company.tax_id,
+        "established_year": company.established_year,
+        "employees": company.employees,
+        "address": company.address,
+        "phone": company.phone,
+        "type": company.type,
+        "registration_number": company.registration_number,
 
+        # ✅ الجديد 🔥
+        "orders": orders
+
+    }), 200
