@@ -179,3 +179,20 @@ def user_routes(app):
             } for r in requests
         ]), 200
 
+    # ✅ Company Profile
+    @app.route("/companies/<int:company_id>", methods=["GET"])
+    def get_company_profile(company_id):
+
+        company = Company.query.get(company_id)
+
+        if not company:
+            return jsonify({"error": "Company not found"}), 404
+
+        return jsonify({
+            "company_id": company.company_id,
+            "name": company.name,
+
+            "email": company.email
+        }), 200
+
+
