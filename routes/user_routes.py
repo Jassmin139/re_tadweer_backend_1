@@ -17,6 +17,7 @@ def user_routes(app):
                 return jsonify({"error": "Name is required"}), 400
             if not data.get("email"):
                 return jsonify({"error": "Email is required"}), 400
+
             if not data.get("phone"):
                 return jsonify({"error": "Phone is required"}), 400
             if not data.get("address"):
@@ -57,6 +58,7 @@ def user_routes(app):
                 "id": u.user_id,
                 "name": u.name,
                 "email": u.email,
+
                 "phone": u.phone,
                 "address": u.address
             })
@@ -64,7 +66,7 @@ def user_routes(app):
         return jsonify(result), 200
 
 
-    # ✅ ✅ Register Company 🔥
+    # ✅ Register Company
     @app.route("/companies/register", methods=["POST"])
     def register_company():
         try:
@@ -72,7 +74,6 @@ def user_routes(app):
 
             if not data.get("name"):
                 return jsonify({"error": "Name is required"}), 400
-
             if not data.get("email"):
                 return jsonify({"error": "Email is required"}), 400
 
@@ -86,10 +87,10 @@ def user_routes(app):
             )
 
             db.session.add(company)
-
             db.session.commit()
 
             return jsonify({
+
                 "message": "Company registered successfully",
                 "company_id": company.company_id
             }), 201
@@ -99,7 +100,7 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ Login (user + company)
+    # ✅ Login
     @app.route("/login", methods=["POST"])
     def login():
         try:
@@ -110,8 +111,6 @@ def user_routes(app):
 
             email = data.get("email")
 
-            # ✅ user
-
             user = User.query.filter_by(email=email).first()
             if user:
                 return jsonify({
@@ -120,7 +119,6 @@ def user_routes(app):
                     "name": user.name
                 }), 200
 
-            # ✅ company
             company = Company.query.filter_by(email=email).first()
             if company:
                 return jsonify({
@@ -135,7 +133,7 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ ✅ User Profile + Orders (مرتبة بالأحدث)
+    # ✅ User Profile + Orders
     @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
@@ -145,14 +143,14 @@ def user_routes(app):
             return jsonify({"error": "User not found"}), 404
 
         requests = RecycleRequest.query.filter_by(user_id=user_id) \
-            .order_by(RecycleRequest.request_id.desc()) \
-            .all()
+            .order_by(RecycleRequest.request_id.desc()).all()
 
         orders = []
 
         for r in requests:
             orders.append({
                 "request_id": r.request_id,
+
                 "quantity": r.quantity,
                 "total_price": r.total_price,
                 "status": r.status,
@@ -163,7 +161,6 @@ def user_routes(app):
 
         return jsonify({
             "user_id": user.user_id,
-
             "name": user.name,
             "email": user.email,
             "phone": user.phone,
@@ -172,8 +169,9 @@ def user_routes(app):
         }), 200
 
 
-    # ✅ (اختياري) Requests فقط
+    # ✅ User Requests
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
+
     def get_user_requests(user_id):
 
         requests = RecycleRequest.query.filter_by(user_id=user_id).all()
@@ -189,9 +187,4 @@ def user_routes(app):
             })
 
         return jsonify(result), 200
-
-
-
-
-
 
