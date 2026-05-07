@@ -193,43 +193,45 @@ def user_routes(app):
 
 
  
+def user_routes(app):
+
     # ✅ Company Profile
-@app.route("/companies/<int:company_id>", methods=["GET"])
-def get_company_profile(company_id):
+    @app.route("/companies/<int:company_id>", methods=["GET"])
+    def get_company_profile(company_id):
 
-    company = Company.query.get(company_id)
+        company = Company.query.get(company_id)
 
-    if not company:
-        return jsonify({"error": "Company not found"}), 404
+        if not company:
+            return jsonify({"error": "Company not found"}), 404
 
-    # ✅ هات الطلبات اللي اتعاملت مع الشركة
-    requests = RecycleRequest.query.filter_by(company_id=company_id).all()
+        requests = RecycleRequest.query.filter_by(company_id=company_id).all()
 
-    orders = []
+        orders = []
 
-    for r in requests:
-        orders.append({
-            "request_id": r.request_id,
-            "quantity": r.quantity,
-            "total_price": r.total_price,
-            "status": r.status,
-            "date": str(r.request_date)
-        })
-  
-    return jsonify({
-        "company_id": company.company_id,
-        "name": company.name,
-        "email": company.email,
+        for r in requests:
+            orders.append({
+                "request_id": r.request_id,
+                "quantity": r.quantity,
+                "total_price": r.total_price,
+                "status": r.status,
+                "date": str(r.request_date)
 
-        "tax_id": company.tax_id,
-        "established_year": company.established_year,
-        "employees": company.employees,
-        "address": company.address,
-        "phone": company.phone,
-        "type": company.type,
-        "registration_number": company.registration_number,
+            })
 
-        # ✅ الجديد 🔥
-        "orders": orders
+        return jsonify({
+            "company_id": company.company_id,
+            "name": company.name,
+            "email": company.email,
 
-    }), 200
+            "tax_id": company.tax_id,
+            "established_year": company.established_year,
+            "employees": company.employees,
+            "address": company.address,
+            "phone": company.phone,
+            "type": company.type,
+            "registration_number": company.registration_number,
+
+            "orders": orders
+        }), 200
+
+ 
