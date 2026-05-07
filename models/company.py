@@ -14,6 +14,14 @@ class Company(db.Model):
     password = db.Column(db.String(255))
     city = db.Column(db.String(100))
 
+    tax_id = db.Column(db.String(50))
+    established_year = db.Column(db.Integer)
+    employees = db.Column(db.Integer)
+    address = db.Column(db.String(255))
+    phone = db.Column(db.String(50))
+    type = db.Column(db.String(50))
+    registration_number = db.Column(db.String(100))
+
     def to_dict(self):
         return {
             "company_id": self.company_id,
