@@ -15,5 +15,5 @@ class User(db.Model):
 
     points = db.Column(db.Integer, default=0)
 
-    # ✅ لازم جوه الكلاس 👇
+    #  لازم جوه الكلاس 
     gifts = db.Column(db.Integer, default=0)

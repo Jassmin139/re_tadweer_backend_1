@@ -7,7 +7,7 @@ from database import db
 
 def user_routes(app):
 
-    # ✅ Register User
+    #  Register User
     @app.route("/users/register", methods=["POST"])
     def register_user():
         try:
@@ -46,7 +46,7 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ GET All Users
+    # GET All Users
     @app.route("/users", methods=["GET"])
     def get_users():
         users = User.query.all()
@@ -64,7 +64,7 @@ def user_routes(app):
 
 
 
-    # ✅ Register Company
+    #  Register Company
     @app.route("/companies/register", methods=["POST"])
     def register_company():
         try:
@@ -106,7 +106,7 @@ def user_routes(app):
 
 
 
-    # ✅ Login (User + Company)
+    #  Login (User + Company)
     @app.route("/login", methods=["POST"])
     def login():
         try:
@@ -139,7 +139,7 @@ def user_routes(app):
             return jsonify({"error": str(e)}), 500
 
 
-    # ✅ User Profile + Orders
+    # User Profile + Orders
     @app.route("/users/<int:user_id>", methods=["GET"])
     def get_user_profile(user_id):
 
@@ -176,7 +176,6 @@ def user_routes(app):
 
 
 
-    # ✅ User Requests
     @app.route("/users/<int:user_id>/requests", methods=["GET"])
     def get_user_requests(user_id):
 
@@ -195,7 +194,7 @@ def user_routes(app):
  
 
 
-    # ✅ Company Profile
+    # Company Profile
     @app.route("/companies/<int:company_id>", methods=["GET"])
     def get_company_profile(company_id):
 

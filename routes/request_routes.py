@@ -13,7 +13,7 @@ def request_routes(app):
     UPLOAD_FOLDER = "uploads"
     BASE_URL = "https://retadweerbackend1-production.up.railway.app/"
 
-    # ✅ Upload Image
+    #  Upload Image
     @app.route("/upload-image", methods=["POST"])
     def upload_image():
 
@@ -41,7 +41,7 @@ def request_routes(app):
         })
 
 
-    # ✅ Create Recycle Request ✅🔥
+    #  Create Recycle Request 
     @app.route("/recycle-requests", methods=["POST"])
     def create_request():
         try:
@@ -67,7 +67,7 @@ def request_routes(app):
             if reward_type not in ["cash", "gift"]:
                 return jsonify({"error": "Reward must be 'cash' or 'gift'"}), 400
 
-            # ✅ Image upload (optional)
+            #  Image upload 
             file = request.files.get("image")
             image_url = None
 
@@ -81,7 +81,7 @@ def request_routes(app):
 
                 image_url = BASE_URL + "uploads/" + filename
 
-            # ✅ إنشاء الطلب + ربطه بالشركة
+            # إنشاء الطلب + ربطه بالشركة
             req = RecycleRequest(
                 quantity=quantity,
                 total_price=total_price,
@@ -96,12 +96,12 @@ def request_routes(app):
             db.session.add(req)
             db.session.flush()
 
-            # ✅ ✅ gifts logic 🔥🔥 (أهم حاجة)
+            # gifts logic 
             user = User.query.get(user_id)
             if user:
                 user.gifts = (user.gifts or 0) + 1
 
-            # ✅ Pickup
+            # Pickup
             if pickup_date:
                 pickup = Pickup(
                     pickup_date=datetime.strptime(pickup_date, "%Y-%m-%d").date(),

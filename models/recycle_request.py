@@ -12,12 +12,12 @@ class RecycleRequest(db.Model):
     request_date = db.Column(db.Date)
     status = db.Column(db.String(50))
 
-    # ✅ مربوط بالمستخدم
+    # مربوط بالمستخدم
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
-    # ✅ مربوط بالشركة (اختياري)
+    #مربوط بالشركه
     company_id = db.Column(db.Integer, db.ForeignKey('companies.company_id'), nullable=True)
 
-    # 🔥 الجديد: نوع المكافأة
+    #جديد: نوع المكافأة
     reward_type = db.Column(db.String(10))  # "cash" أو "gift"
     image_path = db.Column(db.String(255))

@@ -6,7 +6,7 @@ from flask_cors import CORS
 from config import Config
 from database import db
 
-# ✅ imports لازم في الأول
+#  imports لازم في الأول
 from routes.user_routes import user_routes
 from routes.material_routes import material_routes
 from routes.price_routes import price_routes
@@ -15,20 +15,20 @@ from routes.pickup_routes import pickup_routes
 from routes.company_routes import company_routes
 from routes.contact_routes import contact_routes
 
-# ✅ مهم جدًا: استيراد كل الموديلز
+#  مهم جدًا: استيراد كل الموديلز
 from models import material_type, material, user, company, recycle_request, pickup, contact, gift
 
-# ✅ إنشاء التطبيق
+#  إنشاء التطبيق
 app = Flask(__name__)
 
-# ✅ CORS
+#  CORS
 CORS(app)
 
-# ✅ Config
+#  Config
 
 app.config.from_object(Config)
 
-# ✅ Database URL
+#  Database URL
 database_url = os.getenv("DATABASE_URL")
 
 if not database_url:
@@ -40,14 +40,14 @@ if database_url.startswith("postgres://"):
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# ✅ init DB
+#  init DB
 db.init_app(app)
 
-# ✅ إنشاء الجداول عند التشغيل
+#  إنشاء الجداول عند التشغيل
 with app.app_context():
     db.create_all()
 
-# ✅ route لإنشاء الجداول يدوي
+#  route لإنشاء الجداول يدوي
 @app.route("/init-db")
 
 def init_db():
@@ -55,7 +55,7 @@ def init_db():
     return "Database created ✅"
 
 
-# ✅ route إضافة ماتريال
+#  route إضافة ماتريال
 @app.route("/add-materials", methods=["GET"])
 def add_materials():
     from models.material_type import MaterialType
@@ -86,7 +86,7 @@ image="img.png", type_id=2)
         return {"error": str(e)}
 
 
-# ✅ ربط routes
+#  ربط routes
 user_routes(app)
 material_routes(app)
 price_routes(app)
@@ -96,20 +96,20 @@ company_routes(app)
 contact_routes(app)
 
 
-# ✅ ✅ عرض الصور (أهم تعديل 🔥)
+# عرض الصور 
 @app.route('/uploads/<filename>')
 
 def get_image(filename):
     return send_from_directory('uploads', filename)
 
 
-# ✅ test route
+#  test route
 @app.route("/")
 def home():
     return {"message": "RE Tadweer Backend Running"}
 
 
-# ✅ تشغيل السيرفر
+#  تشغيل السيرفر
 port = int(os.environ.get("PORT", 8080))
 
 if __name__ == "__main__":
