@@ -170,6 +170,7 @@ def user_routes(app):
             "email": user.email,
             "phone": user.phone,
             "address": user.address,
+            "gifts": user.gifts,
             "orders": orders
         }), 200
 
