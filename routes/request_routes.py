@@ -2,6 +2,7 @@
 from flask import request, jsonify
 from models.recycle_request import RecycleRequest
 from models.pickup import Pickup
+from models.user import User  # ✅ مهم جدًا
 from database import db
 from datetime import date, datetime
 import os
@@ -23,6 +24,7 @@ def request_routes(app):
 
         if file.filename == "":
             return jsonify({"error": "No selected file"}), 400
+
 
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
@@ -47,8 +49,6 @@ def request_routes(app):
             total_price = request.form.get("total_price")
             user_id = request.form.get("user_id")
             reward_type = request.form.get("reward_type")
-
-            # ✅ أهم سطر (حل مشكلتك)
             company_id = request.form.get("company_id")
 
             pickup_date = request.form.get("pickup_date")
@@ -59,18 +59,17 @@ def request_routes(app):
                 return jsonify({"error": "Quantity is required"}), 400
             if not total_price:
                 return jsonify({"error": "Total price is required"}), 400
+
             if not user_id:
                 return jsonify({"error": "User ID is required"}), 400
             if not reward_type:
                 return jsonify({"error": "Reward type is required"}), 400
-
             if reward_type not in ["cash", "gift"]:
                 return jsonify({"error": "Reward must be 'cash' or 'gift'"}), 400
 
             # ✅ Image upload (optional)
             file = request.files.get("image")
             image_url = None
-
 
             if file:
                 if not os.path.exists(UPLOAD_FOLDER):
@@ -82,7 +81,7 @@ def request_routes(app):
 
                 image_url = BASE_URL + "uploads/" + filename
 
-            # ✅ إنشاء الطلب + ربطه بالشركة 🔥
+            # ✅ إنشاء الطلب + ربطه بالشركة
             req = RecycleRequest(
                 quantity=quantity,
                 total_price=total_price,
@@ -91,12 +90,16 @@ def request_routes(app):
                 user_id=user_id,
                 reward_type=reward_type,
                 image_path=image_url,
-
-                company_id=company_id 
+                company_id=company_id
             )
 
             db.session.add(req)
             db.session.flush()
+
+            # ✅ ✅ gifts logic 🔥🔥 (أهم حاجة)
+            user = User.query.get(user_id)
+            if user:
+                user.gifts = (user.gifts or 0) + 1
 
             # ✅ Pickup
             if pickup_date:
@@ -119,4 +122,5 @@ def request_routes(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": str(e)}), 500
+
 

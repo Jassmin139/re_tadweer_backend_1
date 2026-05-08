@@ -13,3 +13,5 @@ class User(db.Model):
     address = db.Column(db.String(255))
 
     points = db.Column(db.Integer, default=0)
+
+gifts = db.Column(db.Integer, default=0)
