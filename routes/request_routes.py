@@ -96,10 +96,12 @@ def request_routes(app):
             db.session.add(req)
             db.session.flush()
 
-            # gifts logic 
+         
+# gifts logic 
             user = User.query.get(user_id)
-            if user:
+            if user and reward_type == "gift":
                 user.gifts = (user.gifts or 0) + 1
+
 
             # Pickup
             if pickup_date:
