@@ -1,5 +1,6 @@
 
 
+
 from database import db
 
 class User(db.Model):
@@ -14,4 +15,5 @@ class User(db.Model):
 
     points = db.Column(db.Integer, default=0)
 
-gifts = db.Column(db.Integer, default=0)
+    # ✅ لازم جوه الكلاس 👇
+    gifts = db.Column(db.Integer, default=0)
