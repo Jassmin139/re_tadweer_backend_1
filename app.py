@@ -103,10 +103,13 @@ def get_image(filename):
     return send_from_directory('uploads', filename)
 
 
-#  test route
+
+from flask import render_template
+
 @app.route("/")
 def home():
-    return {"message": "RE Tadweer Backend Running"}
+    return render_template("index.html")
+
 
 
 #  تشغيل السيرفر
