@@ -6,11 +6,11 @@ class Company(db.Model):
 
     company_id = db.Column(db.Integer, primary_key=True)
 
-    #  بيانات الشركة
+
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
 
-    # لازم جوه الكلاس 
+     
     password = db.Column(db.String(255))
     city = db.Column(db.String(100))
 
