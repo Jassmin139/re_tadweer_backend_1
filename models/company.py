@@ -5,15 +5,10 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     company_id = db.Column(db.Integer, primary_key=True)
-
-
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-
-     
     password = db.Column(db.String(255))
     city = db.Column(db.String(100))
-
     tax_id = db.Column(db.String(50))
     established_year = db.Column(db.Integer)
     employees = db.Column(db.Integer)
