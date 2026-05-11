@@ -34,7 +34,7 @@ with app.app_context():
 
 def init_db():
     db.create_all()
-    return "Database created ✅"
+    return "Database created "
 
 @app.route("/add-materials", methods=["GET"])
 def add_materials():
@@ -58,7 +58,7 @@ def add_materials():
             db.session.add_all([m1, m2, m3])
             db.session.commit()
 
-        return {"message": "Materials added ✅"}
+        return {"message": "Materials added "}
 
     except Exception as e:
         return {"error": str(e)}
