@@ -52,9 +52,7 @@ def add_materials():
 
         if Material.query.count() == 0:
             m1 = Material(name="Plastic", description="Plastic waste", price=5, image="img.png", type_id=1)
-            m2 = Material(name="Paper", description="Paper waste", price=2,
-
-image="img.png", type_id=2)
+            m2 = Material(name="Paper", description="Paper waste", price=2,image="img.png", type_id=2)
             m3 = Material(name="Electronics", description="Electronic waste", price=7, image="img.png", type_id=3)
 
             db.session.add_all([m1, m2, m3])
